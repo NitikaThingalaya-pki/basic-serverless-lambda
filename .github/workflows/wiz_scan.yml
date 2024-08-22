@@ -51,7 +51,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ./serverless-package
-        path: ./artifacts
+        path: basic-serverless-lambda/artifacts
 
 
     - name: Retrieve Wiz credentials from AWS Secrets Manager
