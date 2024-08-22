@@ -1,0 +1,32 @@
+name: Deploy Lambda
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Configure AWS credentials from GitHub Actions OIDC
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}  # ARN of the IAM role to assume
+        aws-region: ${{ secrets.AWS_REGION }}
+        role-session-name: GitHub-OIDC-Session
+
+    - name: Install Serverless Framework
+      run: npm install -g serverless
+
+    - name: Serverless deploy
+      run: serverless deploy -v
