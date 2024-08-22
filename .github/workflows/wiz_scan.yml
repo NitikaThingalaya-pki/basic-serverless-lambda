@@ -48,13 +48,10 @@ jobs:
     - name: List package directory contents
       run: ls -R ./serverless-package
   
-    - name: Commit package to repository
-      run: |
-        git config --global user.email "nitika.thingalaya@revvity.com"
-        git config --global user.name "NitikaThingalaya-pki"
-        git add ./serverless-package
-        git commit -m "Add serverless package"
-        git push
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ./serverless-package
+        path: ./artifacts
 
 
     - name: Retrieve Wiz credentials from AWS Secrets Manager
