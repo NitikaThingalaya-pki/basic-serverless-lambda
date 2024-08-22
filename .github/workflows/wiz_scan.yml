@@ -50,13 +50,12 @@ jobs:
   
     - name: Commit package to repository
       run: |
-        git config --global user.email "you@example.com"
-        git config --global user.name "Your Name"
+        git config --global user.email "nitika.thingalaya@revvity.com"
+        git config --global user.name "NitikaThingalaya-pki"
         git add ./serverless-package
         git commit -m "Add serverless package"
         git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
     - name: Retrieve Wiz credentials from AWS Secrets Manager
       id: get-wiz-credentials
