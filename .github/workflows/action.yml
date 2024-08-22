@@ -33,6 +33,7 @@ jobs:
 
     - name: Install Serverless Framework
       run: npm install -g serverless
-
-    - name: Serverless deploy
-      run: serverless deploy -v
+    - name: Serverless Authentication
+      run: sls config credentials --provider aws --key ${{ env.AWS_ACCESS_KEY_ID }} --secret ${{ env.AWS_SECRET_ACCESS_KEY }}
+    - name: Deploy to AWS
+      run: serverless deploy --stage prod --verbose
