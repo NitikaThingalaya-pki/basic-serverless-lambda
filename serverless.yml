@@ -5,6 +5,7 @@ provider:
   runtime: nodejs18.x
   stage: dev
   region: us-east-1
+  role: arn:aws:iam::322598643824:role/Github-OIDC-Lambda
 
 functions:
   hello:
