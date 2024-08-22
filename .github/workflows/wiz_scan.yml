@@ -1,0 +1,73 @@
+name: Deploy Lambda OIDC Wiz Scan
+
+on:
+  workflow_dispatch:
+
+
+permissions:
+      id-token: write # This is required for aws oidc connection
+      contents: read # This is required for actions/checkout
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    environment: aws
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Configure AWS credentials from AWS account
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: Github-OIDC-Lambda
+
+    - name: Install Serverless Framework
+      run: npm install -g serverless@3
+
+    - name: Install AWS CLI
+      run: |
+            sudo apt-get update
+            sudo apt-get install -y awscli
+  
+    - name: Retrieve Wiz credentials from AWS Secrets Manager
+      id: get-wiz-credentials
+      run: |
+            WIZ_CREDS=$(aws secretsmanager get-secret-value --secret-id Wiz/CICD --query SecretString --output text)
+            echo "Wiz credentials fetched: $WIZ_CREDS"
+            echo "$WIZ_CREDS" > wiz_creds.json
+            export WIZ_CLIENT_ID=$(jq -r .WIZ_CLIENT_ID wiz_creds.json)
+            export WIZ_CLIENT_SECRET=$(jq -r .WIZ_CLIENT_SECRET wiz_creds.json)
+            echo "WIZ_CLIENT_ID=${WIZ_CLIENT_ID}" >> $GITHUB_ENV
+            echo "WIZ_CLIENT_SECRET=${WIZ_CLIENT_SECRET}" >> $GITHUB_ENV
+            echo "WIZ_CLIENT_ID: ${WIZ_CLIENT_ID}"
+            echo "WIZ_CLIENT_SECRET: ${WIZ_CLIENT_SECRET}"
+  
+    - name: Download Wiz CLI
+      run: curl -o wizcli https://downloads.wiz.io/wizcli/latest/wizcli-linux-amd64 && chmod +x wizcli
+    
+    - name: Authenticate to Wiz
+      run: ./wizcli auth --id "$WIZ_CLIENT_ID" --secret "$WIZ_CLIENT_SECRET"
+          #env:
+          #  WIZ_CLIENT_ID: ${{ secrets.WIZ_CLIENT_ID }}
+          #  WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
+    
+    - name: Run wiz-cli directory scan
+      run: ./wizcli dir scan --path . --policy "Revvity Data Security policy,Revvity Secret Management Policy,Revvity Vulnerability Management policy"
+    
+    - name: Run wiz-cli IAC scan
+      run: ./wizcli iac scan --path . --policy "Revvity Infrastructure As Code Policy"
+      
+    - name: Serverless Authentication
+      run: sls config credentials --provider aws --key ${{ env.AWS_ACCESS_KEY_ID }} --secret ${{ env.AWS_SECRET_ACCESS_KEY }}
+    - name: Deploy to AWS
+      run: serverless deploy --stage prod --verbose
