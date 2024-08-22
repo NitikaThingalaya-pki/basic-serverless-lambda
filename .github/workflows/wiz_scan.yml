@@ -49,8 +49,7 @@ jobs:
             export WIZ_CLIENT_SECRET=$(jq -r .WIZ_CLIENT_SECRET wiz_creds.json)
             echo "WIZ_CLIENT_ID=${WIZ_CLIENT_ID}" >> $GITHUB_ENV
             echo "WIZ_CLIENT_SECRET=${WIZ_CLIENT_SECRET}" >> $GITHUB_ENV
-            echo "WIZ_CLIENT_ID: ${WIZ_CLIENT_ID}"
-            echo "WIZ_CLIENT_SECRET: ${WIZ_CLIENT_SECRET}"
+            ls
   
     - name: Download Wiz CLI
       run: curl -o wizcli https://downloads.wiz.io/wizcli/latest/wizcli-linux-amd64 && chmod +x wizcli
@@ -67,7 +66,7 @@ jobs:
     - name: Run wiz-cli IAC scan
       run: ./wizcli iac scan --path . --policy "Revvity Infrastructure As Code Policy"
       
-    - name: Serverless Authentication
-      run: sls config credentials --provider aws --key ${{ env.AWS_ACCESS_KEY_ID }} --secret ${{ env.AWS_SECRET_ACCESS_KEY }}
-    - name: Deploy to AWS
-      run: serverless deploy --stage prod --verbose
+    #- name: Serverless Authentication
+    #  run: sls config credentials --provider aws --key ${{ env.AWS_ACCESS_KEY_ID }} --secret ${{ env.AWS_SECRET_ACCESS_KEY }}
+    #- name: Deploy to AWS
+    #  run: serverless deploy --stage prod --verbose
