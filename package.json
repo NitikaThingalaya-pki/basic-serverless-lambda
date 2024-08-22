@@ -1,0 +1,15 @@
+{
+  "name": "serverless-project",
+  "version": "1.0.0",
+  "description": "A Serverless Framework project",
+  "main": "controllers/randomNumberController.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.999.0"  // Add other dependencies if needed
+  },
+  "devDependencies": {
+    "serverless": "^3.39.0"  // Ensure this matches your Serverless Framework version
+  }
+}
