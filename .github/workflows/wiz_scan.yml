@@ -42,7 +42,7 @@ jobs:
     - name: Serverless Authentication
       run: sls config credentials --provider aws --key ${{ env.AWS_ACCESS_KEY_ID }} --secret ${{ env.AWS_SECRET_ACCESS_KEY }}
     - name: Create Package
-      run: serverless package
+      run: serverless package --package /basic-serverless-lambda/artifacts
   
     - name: Retrieve Wiz credentials from AWS Secrets Manager
       id: get-wiz-credentials
