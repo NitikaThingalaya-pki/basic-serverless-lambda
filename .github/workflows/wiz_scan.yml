@@ -38,6 +38,11 @@ jobs:
       run: |
             sudo apt-get update
             sudo apt-get install -y awscli
+
+    - name: Serverless Authentication
+      run: sls config credentials --provider aws --key ${{ env.AWS_ACCESS_KEY_ID }} --secret ${{ env.AWS_SECRET_ACCESS_KEY }}
+    - name: Create Package
+      run: serverless package
   
     - name: Retrieve Wiz credentials from AWS Secrets Manager
       id: get-wiz-credentials
@@ -66,7 +71,6 @@ jobs:
     - name: Run wiz-cli IAC scan
       run: ./wizcli iac scan --path . --policy "Revvity Infrastructure As Code Policy"
       
-    #- name: Serverless Authentication
-    #  run: sls config credentials --provider aws --key ${{ env.AWS_ACCESS_KEY_ID }} --secret ${{ env.AWS_SECRET_ACCESS_KEY }}
+   
     #- name: Deploy to AWS
     #  run: serverless deploy --stage prod --verbose
