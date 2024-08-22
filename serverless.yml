@@ -6,6 +6,7 @@ provider:
   stage: dev
   region: us-east-1
   role: arn:aws:iam::322598643824:role/Github-OIDC-Lambda
+  deploymentBucket: basic-serverless-lambda-p-serverlessdeploymentbuck-a3eimrpt50lb
 
 functions:
   hello:
