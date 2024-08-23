@@ -67,7 +67,8 @@ jobs:
         echo "WIZ_CLIENT_ID=${WIZ_CLIENT_ID}" >> $GITHUB_ENV
         echo "WIZ_CLIENT_SECRET=${WIZ_CLIENT_SECRET}" >> $GITHUB_ENV
         ls
-        
+        cat package.json
+        cat ./package.json
 
     - name: Download Wiz CLI
       run: curl -o wizcli https://downloads.wiz.io/wizcli/latest/wizcli-linux-amd64 && chmod +x wizcli
