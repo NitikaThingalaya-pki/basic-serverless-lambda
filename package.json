@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "aws-sdk": "^2.999.0"  // Add other dependencies if needed
+    "aws-sdk": "^2.999.0",
+    "qs": "^0.6.5"
   },
   "devDependencies": {
     "serverless": "^3.39.0"  // Ensure this matches your Serverless Framework version
