@@ -77,7 +77,7 @@ jobs:
       run: ./wizcli auth --id "$WIZ_CLIENT_ID" --secret "$WIZ_CLIENT_SECRET"
     
     - name: Run wiz-cli directory scan
-      run: ./wizcli dir scan --path . --policy "Revvity Data Security policy,Revvity Secret Management Policy,Revvity Vulnerability Management policy"
+      run: ./wizcli dir scan --path ./package.json --policy "Revvity Data Security policy,Revvity Secret Management Policy,Revvity Vulnerability Management policy"
     
     - name: Run wiz-cli IAC scan
       run: ./wizcli iac scan --path . --policy "Revvity Infrastructure As Code Policy"
